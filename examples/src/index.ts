@@ -128,13 +128,94 @@ printImportant("ERROR", "This is a message")
 
 // Class
 class Point1 {
-    readonly text: 'point'
+    // readonly text: 'point'
+    _length = 0;
     x: number
     y: number
-    constructor(x = 0, y = 0) {
-        this.x = x;
-        this.y = y;
+    constructor(x: number, y:number) {
+        this.x = x
+        this.y = y
+    }
+
+    scale(n: number): void {
+        this.x *= n;
+        this.y *= n;
+    }
+
+    get length() {
+        return this._length;
+    }
+
+    set length(value) {
+        this._length = value;
+    }
+
+}
+
+const pt = new Point1(5, 7)
+
+//implements
+interface A {
+    x: number;
+    y?: number;
+}
+
+class C implements A {
+    x = 0;
+}
+
+//extends
+class Animal {
+    move() {
+      console.log("Moving along!");
+    }
+}
+   
+class Dog extends Animal {
+    woof(times: number): void {
+        for (let i = 0; i < times; i++) {
+            console.log("woof!");
+        }
     }
 }
 
-const pt = new Point1(0, 1);
+//Member visibility
+class Base {
+    a = 10
+    protected x = 1
+    private c = 10
+}
+
+//Static members
+class MyClass {
+    static x = 0;
+    static printX() {
+      console.log(MyClass.x);
+    }
+}
+console.log(MyClass.x);
+MyClass.printX();
+
+//Class Expressions
+const someClass = class<Type> {
+    content: Type;
+    constructor(value: Type) {
+      this.content = value;
+    }
+}
+
+const m = new someClass("Hello, world");
+
+//Relationships between classes
+class Person {
+    name: string;
+    age: number;
+}
+
+class Employee {
+    name: string;
+    age: number;
+    salary: number;
+}
+
+const p: Person = new Employee();
