@@ -219,3 +219,41 @@ class Employee {
 }
 
 const p: Person = new Employee();
+
+//Variable declarations
+//Destructuring
+
+//Array destructuring
+let input = [1, 2];
+let [firstI, secondI] = input;
+console.log(firstI); // outputs 1
+console.log(secondI); // outputs 2
+
+//Tuple destructuring
+let tuple: [number, string, boolean] = [1, "hello", true];
+let [a, b, c] = tuple; // a: number, b: string, c: boolean
+
+//Object destructuring
+let o = {
+    x: "foo",
+    y: 12,
+    z: "bar",
+  };
+let { x, y } = o;
+
+//Function destructuring
+type D = { a1: string; b1?: number };
+function f({ a1, b1 }: D): void {
+  // ...
+}
+
+//Spread
+let first = [1, 2];
+let second = [3, 4];
+let bothPlus = [0, ...first, ...second, 5]
+
+//Spread Object
+let defaults = { food: "spicy", price: "$$", ambiance: "noisy" };
+let search = { ...defaults, food: "rich" };
+
+
