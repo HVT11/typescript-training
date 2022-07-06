@@ -256,4 +256,63 @@ let bothPlus = [0, ...first, ...second, 5]
 let defaults = { food: "spicy", price: "$$", ambiance: "noisy" };
 let search = { ...defaults, food: "rich" };
 
+//Generics
+function identity<Type>(arg: Type): Type {
+    return arg;
+}
 
+//Generics Types
+let myIndentify: {<Type>(arg: Type): Type} = identity
+
+//Generics classes
+class GenericNumber<Type> {
+    zeroValue: Type;
+    add: (x: Type, y: Type) => Type;
+}
+   
+let myGenericNumber = new GenericNumber<string>();
+myGenericNumber.add = function (x, y) {
+    return x + y;
+}
+
+console.log(myGenericNumber.add('x', 'y'))
+
+//Generic constrainst
+interface Lengthwise {
+    length: number;
+}
+   
+function loggingIdentity<Type extends Lengthwise>(arg: Type): Type {
+    console.log(arg.length);
+    return arg;
+}
+
+loggingIdentity({length: 10, value : 10})
+
+//Class types in generic
+class BeeKeeper {
+    hasMask: boolean = true;
+}
+   
+class ZooKeeper {
+    nametag: string = "Mikle";
+}
+
+class Animals {
+    numLegs: number = 4
+}
+
+class Bee extends Animals {
+    keeper: BeeKeeper = new BeeKeeper()
+}
+
+class Lion extends Animals {
+    keeper: ZooKeeper = new ZooKeeper() 
+}
+
+function createInstance<Class extends Animals>(c: new() => Class): Class {
+    return new c()
+}
+
+createInstance(Lion).keeper.nametag
+createInstance(Bee).keeper.hasMask
