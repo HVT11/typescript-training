@@ -316,3 +316,113 @@ function createInstance<Class extends Animals>(c: new() => Class): Class {
 
 createInstance(Lion).keeper.nametag
 createInstance(Bee).keeper.hasMask
+
+//Utility Type
+//Partial<Type>
+interface Todo {
+    title: string
+    description: string
+    completed: string
+}
+   
+function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
+    return { ...todo, ...fieldsToUpdate }
+}
+   
+const todo1 = {
+    title: "organize desk",
+    description: "clear clutter",
+}
+
+const todo2 = updateTodo(todo1, {
+    description: "throw out trash",
+})
+
+//Required<Type>
+interface Props {
+    a?: number;
+    b?: string;
+  }
+
+const obj2: Required<Props> = { a: 5, b: 'b'};
+
+//Readonly<Type>
+const todo: Readonly<Todo> = {
+    description: "abc",
+    title: "Delete inactive users",
+    completed: 'a'
+}
+
+//Record<Keys, Type>
+interface CatInfo {
+    age: number
+    breed: string
+}
+   
+type CatName = "miffy" | "boris" | "mordred"
+   
+const cats: Record<CatName, CatInfo> = {
+    miffy: { age: 10, breed: "Persian" },
+    boris: { age: 5, breed: "Maine Coon" },
+    mordred: { age: 16, breed: "British Shorthair" },
+}
+
+//Pick<Type, Keys>
+type TodoPreview1= Pick<Todo, "title" | "completed">
+
+const todoPreview: TodoPreview1 = {
+    title: 'abc',
+    completed: 'x',
+}
+
+//Omit<Type, Keys>
+type TodoPreview2 = Omit<Todo, "completed">;
+const todoPreview2: TodoPreview2 = {
+    title: 'abc',
+    description: 'abc'
+}
+
+//Exclude<UnionType, ExcludedMembers>
+type T0 = Exclude<"a" | "b" | "c", "a">
+
+//Extract<Type, Union>
+type T1 = Extract<"a" | "b" | "c", "a" | "f">
+
+//NonNullable<Type>
+type T2 = NonNullable<string[] | null | undefined>
+
+//Parameters<Type>
+type T3 = Parameters<() => string>
+
+//ConstructorParameters<Type>
+type T4 = ConstructorParameters<ErrorConstructor>
+
+//ReturnType<Type>
+type T5 = ReturnType<() => string>
+
+//InstanceType<Type>
+class E {
+    x = 0;
+    y = 0;
+  }
+   
+type T6 = InstanceType<typeof E>
+
+//ThisParameterType<Type>
+function toHex(this: Number) {
+    return this.toString(16);
+}
+   
+function numberToString1(n: ThisParameterType<typeof toHex>) {
+    return toHex.apply(n);
+}
+
+//OmitThisParameter<Type>
+const fiveToHex: OmitThisParameter<typeof toHex> = toHex.bind(5);
+console.log(fiveToHex());
+
+//ThisType<Type>
+type ObjectDescriptor<D, M> = {
+    data?: D
+    methods?: M & ThisType<D & M> // Type of 'this' in methods is D & M
+}
