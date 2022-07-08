@@ -20,13 +20,13 @@ const greet = (name: string) => {
     console.log('Hello '+ name)
 }
 
-greet("Tri Huynh")
+//greet("Tri Huynh")
 
 const numberToString = (number: number):string => {
     return ''+ number
 }
 
-console.log(typeof numberToString(3))
+//console.log(typeof numberToString(3))
 
 //Object Types
 function printName(obj: { first: string; last?: string }) {
@@ -47,8 +47,8 @@ function printId(id: number | string) {
     }
 }
 
-printId(101)
-printId("202")
+//printId(101)
+//printId("202")
 
 //Interfaces
 interface Point {
@@ -61,7 +61,7 @@ function printCoord(pt: Point) {
     console.log("The coordinate's y value is " + pt.y)
 }
 
-printCoord({x: 100, y: 100})
+//printCoord({x: 100, y: 100})
 
 //Literal Types
 let changingString = "Hello World"
@@ -124,7 +124,7 @@ function printImportant(key: LogLevelStrings, message: string) {
       console.log("Log level message is:", message)
     }
 }
-printImportant("ERROR", "This is a message")
+//printImportant("ERROR", "This is a message")
 
 // Class
 class Point1 {
@@ -193,8 +193,8 @@ class MyClass {
       console.log(MyClass.x);
     }
 }
-console.log(MyClass.x);
-MyClass.printX();
+//console.log(MyClass.x);
+//MyClass.printX();
 
 //Class Expressions
 const someClass = class<Type> {
@@ -226,8 +226,8 @@ const p: Person = new Employee();
 //Array destructuring
 let input = [1, 2];
 let [firstI, secondI] = input;
-console.log(firstI); // outputs 1
-console.log(secondI); // outputs 2
+//console.log(firstI); // outputs 1
+//console.log(secondI); // outputs 2
 
 //Tuple destructuring
 let tuple: [number, string, boolean] = [1, "hello", true];
@@ -275,7 +275,7 @@ myGenericNumber.add = function (x, y) {
     return x + y;
 }
 
-console.log(myGenericNumber.add('x', 'y'))
+//console.log(myGenericNumber.add('x', 'y'))
 
 //Generic constrainst
 interface Lengthwise {
@@ -332,6 +332,7 @@ function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
 const todo1 = {
     title: "organize desk",
     description: "clear clutter",
+    completed: 'a'
 }
 
 const todo2 = updateTodo(todo1, {
@@ -342,7 +343,7 @@ const todo2 = updateTodo(todo1, {
 interface Props {
     a?: number;
     b?: string;
-  }
+}
 
 const obj2: Required<Props> = { a: 5, b: 'b'};
 
@@ -425,4 +426,65 @@ console.log(fiveToHex());
 type ObjectDescriptor<D, M> = {
     data?: D
     methods?: M & ThisType<D & M> // Type of 'this' in methods is D & M
+}
+
+//Decorators
+function defirst() {
+    console.log("first(): factory evaluated");
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+      console.log("first(): called");
+    };
+}
+   
+function desecond() {
+    console.log("second(): factory evaluated");
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+      console.log("second(): called");
+    };
+}
+   
+class ExampleClass {
+    //@defirst()
+    //@desecond()
+    //method() {}
+}
+
+//Class decorator
+function reportableClassDecorator<T extends { new (...args: any[]): {} }>(constructor: T) {
+    return class extends constructor {
+      reportingURL = "http://www...";
+    };
+}
+   
+@reportableClassDecorator
+class BugReport {
+    type = "report";
+    title: string;
+   
+    constructor(t: string) {
+      this.title = t;
+    }
+}
+   
+const bug = new BugReport("Needs dark mode");
+console.log(bug.title) // Prints "Needs dark mode"
+console.log(bug.type) // Prints "report"
+
+//Method decorator
+function enumerable(value: boolean) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+      descriptor.enumerable = value;
+    };
+}
+
+class Greeter {
+    greeting: string;
+    constructor(message: string) {
+      this.greeting = message;
+    }
+   
+    @enumerable(false)
+    greet() {
+      return "Hello, " + this.greeting;
+    }
 }
