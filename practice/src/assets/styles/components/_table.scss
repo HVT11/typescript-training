@@ -1,0 +1,28 @@
+.table {
+    display: block;
+    width: 100%;
+    height: calc(100% - 60.44px);
+    text-align: left;
+    &__head {
+        display: block;
+    }
+    &__body {
+        display: block;
+        height: calc(100% - 55px);
+        overflow: auto;
+    }
+    &__row {
+        @include flex-center-vert;
+        width: 100%;
+        height: 55px;
+        border: 1px solid $border-color;
+        background-color: $white-color;
+        &--active {
+            background-color: #f4f5f9;
+            border-left: 3px solid $primary-color;
+        }
+    }
+    &__col {
+        width: 25%;
+    }
+}

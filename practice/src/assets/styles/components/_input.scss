@@ -1,0 +1,37 @@
+.input-search {
+	width: 95%;
+	font-size: 1rem;
+    padding: 6px;
+	border: transparent;
+	&:focus {
+		border: none;
+		outline: 2px solid $primary-color;
+		border-radius: 2px;
+	}
+}
+
+.input-box {
+	@include flex-center-vert;
+    justify-content: space-between;
+    margin: 20px;
+    &__input {
+        width: 70%;
+        font-size: 16px;
+        padding: 6px;
+        border: 1px solid $border-color;
+        &:focus {
+            outline: 2px solid $primary-color;
+        }
+    }
+}
+
+.input-uname {
+    font-size: 16px;
+    height: 30px;
+    width: 60%;
+    padding: 6px;
+	border: 1px solid $border-color;
+	&:focus {
+		outline: 2px solid $primary-color;
+	}
+}

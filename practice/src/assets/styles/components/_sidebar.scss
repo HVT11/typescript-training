@@ -1,0 +1,25 @@
+.sidebar {
+    background-color: #4a4e58;
+    &__list {
+        list-style: none;
+        padding-left: 0;
+    }
+    &__item {
+        padding: 5px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        color: white;
+        &__label {
+            margin: 10px;
+        }
+        &:hover {
+            cursor: pointer;
+        }
+        &--active {
+            color: $primary-color;
+            background-color: #00000033;
+            border-left: 3px solid $primary-color;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.label__status {
+    width: 100px;
+    padding: 4px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 16px;
+    color: $danger-color;
+    background-color: $danger-bg;
+    &--active {
+        color: $success-color;
+        background-color: $success-bg;
+    }
+}

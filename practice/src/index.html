@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice One</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./assets/styles/main.scss">
+</head>
+<body>
+    <header class="header">
+        <h1 class="header__branch">User Manager</h1>
+    </header>
+
+    <div class="container grid">
+        <div class="app-container grid__row">
+            <div class="sidebar grid__column-2">
+                <button class="btn btn--primary btn--large" id="btn-open-form-add">+ New</button>
+                <ul class="sidebar__list">
+                    <li class="sidebar__item sidebar__item--active">
+                        <i class="fa-solid fa-user-group"></i>
+                        <p class="sidebar__item__label">Users</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="main grid__column-10">
+                <div class="grid__row">
+                    <div class="grid__column-max" id="app-main">
+                        <div class="toolbar">
+                            <div class="toolbar__title" id="title">
+                                <h3 class="title__label">Users</h3>
+                                <div class="box-icon" id="btn-search">
+                                    <i class="icon fa-solid fa-magnifying-glass"></i>
+                                </div>
+                            </div>
+                            <div class="toolbar__search" id="search">
+                                <input type="search" placeholder="Search..." class="input-search" id="input-search">
+                                <div class="box-icon" id="btn-cancel-search">
+                                    <i class="icon fa-solid fa-xmark"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table">
+                            <thead class="table__head">
+                                <tr class="table__row bg-light border-bot-primary">
+                                    <th class="table__col"></th>
+                                    <th class="table__col">Full name</th>
+                                    <th class="table__col">Status</th>
+                                    <th class="table__col">Email</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table__body" style="display: block;" id="list-user">
+                                <!-- Render list user here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="sub" id="app-sub">
+                        <div class="info__view info--active" id="info-view">
+                            <div class="toolbar">
+                                <div class="toolbar__title">
+                                    <div class="d-flex">
+                                        <h3 class="title__label">User information</h3>
+                                        <div class="label__status mg-left-m" id="detail-status">Active</div>
+                                    </div>
+                                    <div class="box-icon" id="btn-edit">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex-center-col padding-l">
+                                <div class="avatar avatar--large avatar--none-border-radius" id="detail-avatar"></div>
+                                <h3 class="personal__name" id="detail-name"></h3>
+                            </div>
+                            <div class="info">
+                                <div class="d-flex">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <p class="info__view__email">Email:</p>
+                                </div>
+                                <p class="mg-left-s" id="detail-email"></p>
+                            </div>
+                        </div>
+
+                        <div class="info__edit" id="info-edit">
+                            <div class="toolbar">
+                                <div class="d-flex">
+                                    <div class="box-icon" id="btn-back">
+                                        <i class="fa-solid fa-arrow-left"></i>
+                                    </div>
+                                    <h3 class="title__label">Edit</h3>
+                                </div>
+                            </div>
+
+                            <div class="padding-m">
+                                <div class="align-left">
+                                    <button class="btn btn--medium" id="btn-delete">Delete</button>
+                                    <button class="btn btn--medium btn--primary" id="btn-save">Save</button>
+                                </div>
+
+                                <div class="mg-top-m">
+                                    <div class="input-box">
+                                        <p class="input-box__label">Full name:</p>
+                                        <input type="text" id="edit-name" class="input-box__input">
+                                    </div>
+
+                                    <div class="input-box">
+                                        <p class="input-box__label">Email:</p>
+                                        <input type="text" id="edit-email" class="input-box__input">
+                                    </div>
+
+                                    <div class="input-box">
+                                        <p class="input-box__label">Avatar:</p>
+                                        <input type="file" id="edit-avatar-url" class="input-box__input">
+                                    </div>
+                                    <div class="avatar avatar--medium avatar--none-border-radius" id="edit-avatar-img"></div>
+
+                                    <div class="input-box" style="justify-content: start;">
+                                        <p class="input-box__label">Status:</p>
+                                        <label class="switch" style="margin: 0 20px;">
+                                            <input type="checkbox" id="edit-check-status">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <div class="label__status mg-left-m" id="edit-status"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="modal">
+        <div class="modal__overlay"></div>
+        <div class="modal__body">
+            <div class="modal__header">
+                <h3 class="modal__title">Enter user name</h3>
+                <div class="box-icon" id="btn-close-form-add">
+                    <i class="fa-solid fa-xmark" ></i>
+                </div>
+            </div>
+            <div class="d-flex d-flex--space-between">
+                <input type="text" name="" id="input-username" class="input-uname">
+                <button class="btn btn--medium" id="btn-add-user">Save</button>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./assets/script/main.ts"></script>
+</body>
+</html>
