@@ -1,5 +1,5 @@
-const BASE_URL_API:string = 'https://docs.webix.com/usermanager-backend'
-const STATUS_CODE:object = {
+const BASE_URL_API = 'https://docs.webix.com/usermanager-backend'
+const STATUS_CODE = {
   OK: 200
 }
 
