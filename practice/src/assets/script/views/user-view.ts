@@ -1,8 +1,46 @@
 import * as helper from "../helpers/helper"
 import * as variables from "../constants/classname"
+import Template from "../templates/template"
+import { User } from "../interface/user"
 
 export default class View {
-    constructor(template) {
+    template: Template
+    detailStatus: HTMLElement
+    detailName: HTMLElement
+    detailAvatar: HTMLElement
+    detailEmail: HTMLElement
+
+    appMain: HTMLElement
+    appSub: HTMLElement
+
+    title: HTMLElement
+    search: HTMLElement
+
+    infoView: HTMLElement
+    infoEdit: HTMLElement
+    listUser: HTMLElement
+
+    inputUsername: HTMLInputElement
+    inputSearch: HTMLInputElement
+    editName: HTMLInputElement
+    editEmail: HTMLInputElement
+    editAvatarImg: HTMLInputElement
+    editAvatarUrl: HTMLInputElement
+    editCheckStatus: HTMLInputElement
+    editStatus: HTMLInputElement
+
+    btnSearch: HTMLElement
+    btnCancelSearch: HTMLElement
+    btnDelete: HTMLElement
+    btnSave: HTMLElement
+    btnEdit: HTMLElement
+    btnBack: HTMLElement
+    btnAddUser: HTMLElement
+    btnOpenFormAdd: HTMLElement
+    btnCloseFormAdd: HTMLElement
+
+    modal: HTMLElement
+    constructor(template: Template) {
         this.template = template
         
         this.detailStatus = helper.getElement('#detail-status')
@@ -20,16 +58,15 @@ export default class View {
         this.infoEdit = helper.getElement('#info-edit')
 
         this.listUser = helper.getElement('#list-user')
-        this.inputUsername = helper.getElement('#input-username')
-        this.inputSearch = helper.getElement('#input-search')
+        this.inputUsername = helper.getInputElement('#input-username')
+        this.inputSearch = helper.getInputElement('#input-search')
 
-        this.editName = helper.getElement('#edit-name')
-        this.editEmail = helper.getElement('#edit-email')
-        this.editAvatarImg = helper.getElement('#edit-avatar-img')
-        this.editAvatarUrl = helper.getElement('#edit-avatar-url')
-        this.editName = helper.getElement('#edit-name')
-        this.editCheckStatus = helper.getElement('#edit-check-status')
-        this.editStatus = helper.getElement('#edit-status')
+        this.editName = helper.getInputElement('#edit-name')
+        this.editEmail = helper.getInputElement('#edit-email')
+        this.editAvatarImg = helper.getInputElement('#edit-avatar-img')
+        this.editAvatarUrl = helper.getInputElement('#edit-avatar-url')
+        this.editCheckStatus = helper.getInputElement('#edit-check-status')
+        this.editStatus = helper.getInputElement('#edit-status')
 
         this.btnSearch = helper.getElement('#btn-search')
         this.btnCancelSearch = helper.getElement('#btn-cancel-search')
@@ -83,7 +120,7 @@ export default class View {
         this.search.style.display = 'none'
     }
 
-    onToggleStatus(element) {
+    onToggleStatus(element: HTMLElement) {
         if(this.editCheckStatus.checked) {
             element.innerHTML = 'Active'
             element.classList.add(variables.USER_STATUS_ACTIVE)
@@ -94,7 +131,7 @@ export default class View {
         }
     }
 
-    onChangeImg(inputUrl, element) {
+    onChangeImg(inputUrl: string, element: HTMLElement) {
         element.innerHTML = ""
         element.style.backgroundImage = `url('${inputUrl}')`
     }
@@ -103,7 +140,7 @@ export default class View {
         this.inputUsername.value = ''
     }
 
-    renderUsers(users) {
+    renderUsers(users: Array<User>) {
         this.listUser.innerHTML = ''
         if (users.length === 0) {
             const p = helper.createElement('p')
@@ -119,7 +156,7 @@ export default class View {
         return helper.getInput(this.inputUsername)
     }
 
-    eventAddUser(handler) {
+    eventAddUser(handler:(input:string) => Promise<any>) {
         if (this.getInputName() !== '') {
             handler(this.getInputName())
             this.resetInput()
@@ -127,12 +164,13 @@ export default class View {
         }
     }
 
-    bindAddNewUser(handler) {
+    bindAddNewUser(handler: (input:string) => Promise<any>) {
         helper.on(this.btnAddUser, 'click', event => {
             this.eventAddUser(handler)
         })
-        helper.on(this.inputUsername, 'keypress', event => {
-            if(event.keyCode === 13) {
+
+        this.inputUsername.addEventListener('keypress', (event: KeyboardEvent) => {
+            if(event.key === 'Enter') {
                 event.preventDefault()
                 this.eventAddUser(handler)
             }
@@ -185,8 +223,8 @@ export default class View {
         })
     }
 
-    bindRowDataUser(handler) {
-        helper.delegate(this.listUser, '.table-body-row', 'click', (event,element) => {
+    bindRowDataUser(handler: (id:number)=> Promise<any>) {
+        helper.delegate(this.listUser, '.table-body-row', 'click', (event: Event,element: HTMLElement) => {
             const id = helper.getId(element)
             this.enableSub()
             helper.getElementAll('.table__row').forEach(element => {
@@ -199,7 +237,7 @@ export default class View {
         })
     }
 
-    viewDetail(user) {
+    viewDetail(user: User) {
         //Validate avatar url
         if(helper.validateAvatarUrl(user.avatar, this.detailAvatar)) {
             this.detailAvatar.style.backgroundImage = `url('${user.avatar}')`
@@ -229,38 +267,41 @@ export default class View {
         this.editName.value = user.name
     }
 
-    viewImage(url) {
+    viewImage(url: string) {
         this.onChangeImg(url, this.editAvatarImg)
         this.onChangeImg(url, this.detailAvatar)
     }
 
-    bindEditUser(handler) {
+    bindEditUser(handler: (id: number, user: User) => void) {
         this.btnSave.addEventListener('click', event => {
             const id = helper.getIdRowActive()
-            const user = {
+            const user: User = {
                 name: helper.getInput(this.editName),
                 email: helper.getInput(this.editEmail),
-                status: (helper.getCheckbox(this.editCheckStatus) === true ? 1 : 0)
-            }
+                status: (helper.getCheckbox(this.editCheckStatus) === true ? true : false),
+                avatar: ''
+            } 
             handler(id, user)
         })
     }
 
-    bindUploadImage(handler) {
+    bindUploadImage(handler: (id: number, file: File) => void) {
         this.editAvatarUrl.addEventListener('change', event => {
-            const id = this.getIdRowActive()
-            const file = this.editAvatarUrl.files[0]
-            handler(id, file)
+            const id = helper.getIdRowActive()
+            if(this.editAvatarUrl.files){
+                const file = this.editAvatarUrl.files[0]
+                handler(id, file)
+            }
         })
     }
 
-    bindDeleteUser(handler) {
+    bindDeleteUser(handler: (id: number) => Promise<any>) {
         this.btnDelete.addEventListener('click', event => {
             handler(helper.getIdRowActive())
         })
     }
 
-    bindSearchUser(handler) {
+    bindSearchUser(handler: (input: string) => void) {
         this.inputSearch.addEventListener('input', event => {
             let input = helper.getInput(this.inputSearch)
             handler(input)
