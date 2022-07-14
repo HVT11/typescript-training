@@ -7,7 +7,7 @@ axios.defaults.baseURL = BASE_URL_API
  * @des Fetch data user from base URL
  * @returns {Promise}
  */
-const fetchUsers = async() => {
+const fetchUsers = async(): Promise<any> => {
     try {
         const res = await axios.get('/users')
         if(res.status === STATUS_CODE.OK){
@@ -26,7 +26,7 @@ const fetchUsers = async() => {
  * @param {Object} payload
  * @returns {Promise}
  */
-const createUser = async(payload) => {
+const createUser = async(payload: object): Promise<any> => {
     try {
         const res = await axios.post('/users', payload)
         if(res.status === STATUS_CODE.OK) {
@@ -45,7 +45,7 @@ const createUser = async(payload) => {
  * @param {number} id
  * @returns {Promise}
  */
-const removeUser = async(id) => {
+const removeUser = async(id: number): Promise<any> => {
     try {
         const res = await axios.delete(`/users/${id}`)
         if(res.status === STATUS_CODE.OK) {
@@ -65,7 +65,7 @@ const removeUser = async(id) => {
  * @param {Object} payload
  * @returns {Promise}
  */
-const updateUser = async (id, payload) => {
+const updateUser = async (id: (string | number), payload: object): Promise<any> => {
     try {
         const response = await axios.put(`/users/${id}`, payload)
         if (response.status === STATUS_CODE.OK) {
@@ -84,7 +84,7 @@ const updateUser = async (id, payload) => {
  * @param {Object} payload
  * @returns {Promise}
  */
-const uploadAvatar = async (id, payload) => {
+const uploadAvatar = async (id: (string | number), payload: object): Promise<any> => {
     try {
         const response = await axios.post(`/users/${id}/avatar`, payload)
         if (response.status === STATUS_CODE.OK) {
