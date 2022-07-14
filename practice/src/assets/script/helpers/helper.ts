@@ -4,8 +4,12 @@ import {TABLE_ROW_ACTIVE} from '../constants/classname'
  * @param {string} selector classname or id of element
  * @return {element} Return the element
  */
-const getElement = (selector:string) =>{
-    return document.querySelector(selector)
+const getElement = (selector:string): HTMLElement =>{
+    return document.querySelector(selector) as HTMLElement
+}
+
+const getInputElement = (selector:string): HTMLInputElement =>{
+    return document.querySelector(selector) as HTMLInputElement
 }
 
 /**
@@ -23,7 +27,7 @@ const getElementAll = (selector:string): NodeListOf<HTMLElement> =>{
  * @param {string} className of element
  * @return {element} Return the element
  */
-const createElement = (tag: string, className: string): HTMLElement =>{
+const createElement = (tag: string, className?: string): HTMLElement =>{
     const element = document.createElement(tag)
     if (className) {
         element.classList.add(className)
@@ -149,7 +153,7 @@ const findRowActive = (className: string): HTMLElement => {
  * @param {string} type Type of event
  * @param {Function} callback
  */
-const on = (target: HTMLElement, type: string, callback: (event: Event) => void) => {
+const on = (target: HTMLElement | Window, type: string, callback: (event: Event) => void) => {
     target.addEventListener(type, callback)
 }
 
@@ -181,6 +185,7 @@ const delegate = (target: HTMLElement, selector: string, type: string, handler: 
 
 export {
     getElement,
+    getInputElement,
     getElementAll,
     createElement,
     validateAvatarUrl,
