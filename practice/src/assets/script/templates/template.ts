@@ -1,5 +1,7 @@
+import { User } from './../interface/user';
 import {USER_STATUS_ACTIVE} from "../constants/classname"
 export default class Template {
+    defautTemplate: string
     constructor() {
         this.defautTemplate
         = `<tr class="table__row table-body-row" id="{{id}}">
@@ -14,8 +16,8 @@ export default class Template {
            </tr>`
     }
 
-    checkStatusText(status) {
-        if(status === 1) {
+    checkStatusText(status: boolean) {
+        if(status) {
             return "Active"
         }
         else {
@@ -23,8 +25,8 @@ export default class Template {
         }
     }
 
-    checkStatusColor(status) {
-        if(status === 1) {
+    checkStatusColor(status: boolean) {
+        if(status) {
             return USER_STATUS_ACTIVE
         }
         else {
@@ -32,7 +34,7 @@ export default class Template {
         }
     }
 
-    checkAvatar(url, username) {
+    checkAvatar(url: string, username: string) {
         if(url !== '') {
             return `<img src="${url}" alt="" class="avatar avatar-small">`
         }
@@ -41,11 +43,11 @@ export default class Template {
         }
     }
 
-    renderListUser(data) {
+    renderListUser(data: Array<User>) {
         let view = ''
         data.forEach(user => {
             let template = this.defautTemplate
-            template = template.replace('{{id}}', user.id)
+            template = template.replace('{{id}}', user.id!.toString())
             template = template.replace('{{avatar}}', this.checkAvatar(user.avatar, user.name))
             template = template.replace('{{email}}', user.email)
             template = template.replace('{{username}}', user.name)
