@@ -1,6 +1,9 @@
+import { User } from './../interface/user';
+import { AxiosResponse } from 'axios'
 import {fetchUsers, createUser, removeUser, updateUser, uploadAvatar} from '../servers/users'
 
 export default class Model {
+    users: Promise<any>
     constructor() {
         this.users = fetchUsers()
     }
@@ -9,7 +12,7 @@ export default class Model {
      * @desc Get users
      * @return {Promise} Return Promise
      */
-    getUsers = () => {
+    getUsers = (): Promise<any> => {
         this.users = fetchUsers()
         return this.users
     }
@@ -19,7 +22,7 @@ export default class Model {
      * @param {string} name username of user that you want to add
      * @return {Promise} Return Promise
      */
-    addNewUser = async (name)=>{
+    addNewUser = async (name: string): Promise<any>=>{
         const user = {
             name: name
         }
@@ -29,9 +32,9 @@ export default class Model {
     /**
      * @desc Edit user
      * @param {object} user user data that you have changed
-     * @return {Array} Return Array of users
+     * @return {Promise} Return Array of users
      */
-    editUser = (id, user) =>{
+    editUser = (id: number, user: object): Promise<any> =>{
         return updateUser(id, user)
     }
 
@@ -40,34 +43,35 @@ export default class Model {
      * @param {number} id Id of user
      * @param {FormData} file
      */
-    uploadImg = async (id, file) => {
+    uploadImg = async (id: number, file: FormData) => {
         return uploadAvatar(id, file)
     }
 
     /**
      * @desc Delete user
-     * @param {int} id Id of user that you want to delete
+     * @param {number} id Id of user that you want to delete
      * @return {Promise} Return Promise
      */
-    deleteUser = (id) =>{
+    deleteUser = (id: number): Promise<any> =>{
         return removeUser(id)
     }
 
     /**
      * @desc Find user
-     * @param {int} id Id of user that you want to find
-     * @return {Object} Return Object
+     * @param {number} id Id of user that you want to find
+     * @return {Promise} Return Object
      */
-    findUser = async(id) => {
-        return (await this.users).find(user => user.id === id)
+    
+    findUser = async(id: number): Promise<any> => {
+        return (await this.users).find((user: User) => user.id === id)
     }
 
     /**
      * @desc Search users
      * @param {string} input Keyword to search
-     * @return {Array} Return Array
+     * @return {Promise} Return Array
      */
-    searchUser = async(input) => {
-        return (await this.users).filter(user => user.name.search(input) >= 0)
+    searchUser = async(input: string): Promise<any> => {
+        return (await this.users).filter((user: User) => user.name.search(input) >= 0)
     }
 }
