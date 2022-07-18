@@ -57,7 +57,7 @@ const validateAvatarUrl = (url:string, element: HTMLElement): boolean =>{
  * @param {HTMLElement} element
  * @param {string} className of element
  */
-const validateStatus = (status: boolean, element: HTMLElement, className: string) =>{
+const validateStatus = (status: 1 | 0, element: HTMLElement, className: string) =>{
     if(status) {
         element.textContent = 'Active'
         element.classList.add(className)
@@ -89,8 +89,8 @@ const validateEmail = (email:string, element: HTMLElement) =>{
  * @param {boolean} status of user
  * @param {HTMLElement} element
  */
-const toggleStatus = (status: boolean, element: HTMLInputElement) =>{
-    element.checked = status
+const toggleStatus = (status: 1 | 0, element: HTMLInputElement) =>{
+    element.checked = Boolean(status)
 }
 
 /**

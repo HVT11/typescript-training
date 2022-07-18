@@ -1,4 +1,4 @@
-import { User } from './../interface/user';
+import { IUser } from '../interface/IUser';
 import {USER_STATUS_ACTIVE} from "../constants/classname"
 export default class Template {
     defautTemplate: string
@@ -16,7 +16,7 @@ export default class Template {
            </tr>`
     }
 
-    checkStatusText(status: boolean) {
+    checkStatusText(status: number) {
         if(status) {
             return "Active"
         }
@@ -25,7 +25,7 @@ export default class Template {
         }
     }
 
-    checkStatusColor(status: boolean) {
+    checkStatusColor(status: number) {
         if(status) {
             return USER_STATUS_ACTIVE
         }
@@ -43,7 +43,7 @@ export default class Template {
         }
     }
 
-    renderListUser(data: Array<User>) {
+    renderListUser(data: Array<IUser>) {
         let view = ''
         data.forEach(user => {
             let template = this.defautTemplate

@@ -1,9 +1,10 @@
 import * as helper from "../helpers/helper"
 import * as variables from "../constants/classname"
 import Template from "../templates/template"
-import { User } from "../interface/user"
+import { IUser } from "../interface/IUser"
+import { IView } from "../interface/IView"
 
-export default class View {
+export default class View implements IView {
     template: Template
     detailStatus: HTMLElement
     detailName: HTMLElement
@@ -140,15 +141,17 @@ export default class View {
         this.inputUsername.value = ''
     }
 
-    renderUsers(users: Array<User>) {
+    renderUsers(users: Array<IUser> | undefined) {
         this.listUser.innerHTML = ''
-        if (users.length === 0) {
-            const p = helper.createElement('p')
-            p.textContent = 'Not have user! Add a new user ?'
-            this.listUser.append(p)
-        }
-        else {
-            this.listUser.innerHTML = this.template.renderListUser(users)
+        if(users){
+            if (users.length === 0) {
+                const p = helper.createElement('p')
+                p.textContent = 'Not have user! Add a new user ?'
+                this.listUser.append(p)
+            }
+            else {
+                this.listUser.innerHTML = this.template.renderListUser(users)
+            }
         }
     }
 
@@ -156,7 +159,7 @@ export default class View {
         return helper.getInput(this.inputUsername)
     }
 
-    eventAddUser(handler:(input:string) => Promise<any>) {
+    eventAddUser(handler:(input:string) => void) {
         if (this.getInputName() !== '') {
             handler(this.getInputName())
             this.resetInput()
@@ -164,7 +167,7 @@ export default class View {
         }
     }
 
-    bindAddNewUser(handler: (input:string) => Promise<any>) {
+    bindAddNewUser(handler: (input:string) => void) {
         helper.on(this.btnAddUser, 'click', event => {
             this.eventAddUser(handler)
         })
@@ -223,7 +226,7 @@ export default class View {
         })
     }
 
-    bindRowDataUser(handler: (id:number)=> Promise<any>) {
+    bindRowDataUser(handler: (id:number)=> void) {
         helper.delegate(this.listUser, '.table-body-row', 'click', (event: Event,element: HTMLElement) => {
             const id = helper.getId(element)
             this.enableSub()
@@ -237,34 +240,36 @@ export default class View {
         })
     }
 
-    viewDetail(user: User) {
-        //Validate avatar url
-        if(helper.validateAvatarUrl(user.avatar, this.detailAvatar)) {
-            this.detailAvatar.style.backgroundImage = `url('${user.avatar}')`
+    viewDetail(user: IUser | undefined) {
+        if(user){
+            //Validate avatar url
+            if(helper.validateAvatarUrl(user.avatar, this.detailAvatar)) {
+                this.detailAvatar.style.backgroundImage = `url('${user.avatar}')`
+            }
+            else {
+                this.detailAvatar.innerHTML = user.name.charAt(0).toUpperCase()
+            }
+    
+            if(helper.validateAvatarUrl(user.avatar, this.editAvatarImg)) {
+                this.editAvatarImg.style.backgroundImage = `url('${user.avatar}')`
+            }
+            else {
+                this.editAvatarImg.innerHTML = user.name.charAt(0).toUpperCase()
+            }
+            
+            //Validate status
+            helper.validateStatus(user.status, this.detailStatus, variables.USER_STATUS_ACTIVE)
+            helper.validateStatus(user.status, this.editStatus, variables.USER_STATUS_ACTIVE)
+            helper.toggleStatus(user.status, this.editCheckStatus)
+            
+    
+            //Validate email
+            helper.validateEmail(user.email, this.detailEmail)
+            this.editEmail.value = user.email
+            
+            this.detailName.textContent = user.name
+            this.editName.value = user.name
         }
-        else {
-            this.detailAvatar.innerHTML = user.name.charAt(0).toUpperCase()
-        }
-
-        if(helper.validateAvatarUrl(user.avatar, this.editAvatarImg)) {
-            this.editAvatarImg.style.backgroundImage = `url('${user.avatar}')`
-        }
-        else {
-            this.editAvatarImg.innerHTML = user.name.charAt(0).toUpperCase()
-        }
-        
-        //Validate status
-        helper.validateStatus(user.status, this.detailStatus, variables.USER_STATUS_ACTIVE)
-        helper.validateStatus(user.status, this.editStatus, variables.USER_STATUS_ACTIVE)
-        helper.toggleStatus(user.status, this.editCheckStatus)
-        
-
-        //Validate email
-        helper.validateEmail(user.email, this.detailEmail)
-        this.editEmail.value = user.email
-        
-        this.detailName.textContent = user.name
-        this.editName.value = user.name
     }
 
     viewImage(url: string) {
@@ -272,13 +277,13 @@ export default class View {
         this.onChangeImg(url, this.detailAvatar)
     }
 
-    bindEditUser(handler: (id: number, user: User) => void) {
+    bindEditUser(handler: (id: number, user: IUser) => void) {
         this.btnSave.addEventListener('click', event => {
             const id = helper.getIdRowActive()
-            const user: User = {
+            const user: IUser = {
                 name: helper.getInput(this.editName),
                 email: helper.getInput(this.editEmail),
-                status: (helper.getCheckbox(this.editCheckStatus) === true ? true : false),
+                status: (helper.getCheckbox(this.editCheckStatus) === true ? 1 : 0),
                 avatar: ''
             } 
             handler(id, user)
@@ -295,7 +300,7 @@ export default class View {
         })
     }
 
-    bindDeleteUser(handler: (id: number) => Promise<any>) {
+    bindDeleteUser(handler: (id: number) => void) {
         this.btnDelete.addEventListener('click', event => {
             handler(helper.getIdRowActive())
         })

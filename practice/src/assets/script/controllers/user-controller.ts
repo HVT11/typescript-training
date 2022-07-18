@@ -1,12 +1,10 @@
-import { User } from './../interface/user';
-import Model from "../models/user-models"
-import View from "../views/user-view"
+import { IView } from './../interface/IView';
+import { IModel } from './../interface/IModel';
+import { IUser } from '../interface/IUser';
 
 export default class Controllers {
-    model: Model
-    view: View
     activeRoute: string | undefined
-    constructor(model: Model, view: View) {
+    constructor(public model: IModel, public view: IView) {
         this.model = model
         this.view = view
         
@@ -33,8 +31,10 @@ export default class Controllers {
         this.activeRoute = route
     }
 
-    renderListUsers = async(users: Promise<any>) => {
-        this.view.renderUsers(await users)
+    renderListUsers = async(users: Promise<IUser[] | undefined>) => {
+        if(users){
+            this.view.renderUsers(await users)
+        }
     }
 
     handleViewUserDeTail = async(id: number) => { 
@@ -43,13 +43,13 @@ export default class Controllers {
 
     handleAddNewUser = async(name: string) => {
         await this.model.addNewUser(name)
-        this.renderListUsers(await this.model.getUsers())
+        this.renderListUsers(this.model.getUsers())
     }
 
-    handleEditUser = async(id: number, user: User) => {
+    handleEditUser = async(id: number, user: IUser) => {
         await this.model.editUser(id, user)
         this.view.disableSub()
-        this.renderListUsers(await this.model.getUsers())
+        this.renderListUsers(this.model.getUsers())
     }
 
     handleUploadImage = async (id: number, file: File) => {
@@ -57,13 +57,13 @@ export default class Controllers {
         formData.append('upload', file)
         formData.append('upload_fullpath', file.name)
         const data = await this.model.uploadImg(id, formData)
-        this.view.viewImage(data.value)
+        this.view.viewImage(data!.value)
     }
 
     handleDeleteUser = async (id: number) => {
         await this.model.deleteUser(id)
         this.view.disableSub()
-        this.renderListUsers(await this.model.getUsers())
+        this.renderListUsers(this.model.getUsers())
     }
 
     handleSearchUser = (inputText: string) => {

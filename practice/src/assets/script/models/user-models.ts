@@ -1,9 +1,10 @@
-import { User } from './../interface/user';
-import { AxiosResponse } from 'axios'
+import { IFileImage } from './../interface/IFileImage';
+import { IModel } from '../interface/IModel';
+import { IUser } from '../interface/IUser';
 import {fetchUsers, createUser, removeUser, updateUser, uploadAvatar} from '../servers/users'
 
-export default class Model {
-    users: Promise<any>
+export default class Model implements IModel {
+    users: Promise<IUser[] | undefined>
     constructor() {
         this.users = fetchUsers()
     }
@@ -12,7 +13,7 @@ export default class Model {
      * @desc Get users
      * @return {Promise} Return Promise
      */
-    getUsers = (): Promise<any> => {
+    getUsers = (): Promise<IUser[] | undefined> =>{
         this.users = fetchUsers()
         return this.users
     }
@@ -22,7 +23,7 @@ export default class Model {
      * @param {string} name username of user that you want to add
      * @return {Promise} Return Promise
      */
-    addNewUser = async (name: string): Promise<any>=>{
+    addNewUser = async (name: string): Promise<Pick<IUser, 'id'> | undefined>=>{
         const user = {
             name: name
         }
@@ -34,16 +35,16 @@ export default class Model {
      * @param {object} user user data that you have changed
      * @return {Promise} Return Array of users
      */
-    editUser = (id: number, user: object): Promise<any> =>{
+    editUser = (id: number, user: IUser): Promise<Pick<IUser, 'id'> | undefined> =>{
         return updateUser(id, user)
     }
 
     /**
-     * @desc Edit user
+     * @desc Upload image
      * @param {number} id Id of user
      * @param {FormData} file
      */
-    uploadImg = async (id: number, file: FormData) => {
+    uploadImg = async (id: number, file: FormData): Promise<IFileImage | undefined> => {
         return uploadAvatar(id, file)
     }
 
@@ -52,7 +53,7 @@ export default class Model {
      * @param {number} id Id of user that you want to delete
      * @return {Promise} Return Promise
      */
-    deleteUser = (id: number): Promise<any> =>{
+    deleteUser = (id: number): Promise<Pick<IUser, 'id'> | undefined> =>{
         return removeUser(id)
     }
 
@@ -62,8 +63,8 @@ export default class Model {
      * @return {Promise} Return Object
      */
     
-    findUser = async(id: number): Promise<any> => {
-        return (await this.users).find((user: User) => user.id === id)
+    findUser = async(id: number): Promise<IUser | undefined> => {
+        return (await this.users)!.find((user: IUser) => user.id === id)
     }
 
     /**
@@ -71,7 +72,7 @@ export default class Model {
      * @param {string} input Keyword to search
      * @return {Promise} Return Array
      */
-    searchUser = async(input: string): Promise<any> => {
-        return (await this.users).filter((user: User) => user.name.search(input) >= 0)
+    searchUser = async(input: string): Promise<IUser[] | undefined> => {
+        return (await this.users)!.filter((user: IUser) => user.name.search(input) >= 0)
     }
 }
